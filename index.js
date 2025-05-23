@@ -6,13 +6,13 @@ export default {
     // Handle HTTP (port 8899 -> 9801)
     if (url.port === '8899') {
       newUrl.hostname = 'api.trynet.xandeum.com';
-      newUrl.port = '9801';
+      newUrl.port = '8899';
       newUrl.protocol = 'http';
     }
     // Handle WebSocket (port 8900 -> 9802)
     else if (url.port === '8900') {
       newUrl.hostname = 'api.trynet.xandeum.com';
-      newUrl.port = '9802';
+      newUrl.port = '8900';
       newUrl.protocol = 'http';
     } else {
       return new Response('Invalid port', { status: 404 });
