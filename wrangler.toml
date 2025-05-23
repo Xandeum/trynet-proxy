@@ -1,0 +1,6 @@
+name = "trynet-proxy"
+compatibility_date = "2025-05-23"
+main = "index.js"
+
+[vars]
+# Add any environment variables if needed (none for now)
