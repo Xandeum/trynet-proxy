@@ -3,22 +3,26 @@ export default {
     let url = new URL(request.url);
     let newUrl = new URL(request.url);
 
-    // Handle HTTP (port 8899 -> 9801)
-    if (url.port === '8899') {
+    const isWebSocket = request.headers.get('Upgrade') === 'websocket';
+
+    if (!isWebSocket) {
       newUrl.hostname = 'api.trynet.xandeum.com';
       newUrl.port = '8899';
       newUrl.protocol = 'http';
-    }
-    // Handle WebSocket (port 8900 -> 9802)
-    else if (url.port === '8900') {
+    } else {
       newUrl.hostname = 'api.trynet.xandeum.com';
       newUrl.port = '8900';
       newUrl.protocol = 'http';
-    } else {
-      return new Response('Invalid port', { status: 404 });
     }
 
     let modifiedRequest = new Request(newUrl, request);
-    return fetch(modifiedRequest);
+    try {
+      return await Promise.race([
+        fetch(modifiedRequest),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Fetch timeout')), 10000))
+      ]);
+    } catch (error) {
+      return new Response(`Fetch error: ${error.message}`, { status: 503 });
+    }
   },
 };
